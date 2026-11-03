@@ -617,10 +617,10 @@ ggsave("output/figuras/t4p2_g1_casen.png", p2_g1,            # Exporta a 300 dpi
 # -----------------------------------------------------------------------------
 
 horas <- ocupados |>
-  filter(habituales  < 888)                                      # Elimina los centinelas 888 y 999
+  filter(habituales  < 888)                   # Elimina los centinelas 888 y 999
 
 
-nrow(horas)                                               # Ocupados que quedan
+nrow(horas)                                   # Ocupados que quedan
 
 # [RESULTADO ESPERADO] 41.739 ocupados.
 
@@ -694,8 +694,8 @@ ggsave("output/figuras/t4p2_g2_horas.png", p2_g2,            # Exporta a 300 dpi
 # -----------------------------------------------------------------------------
 
 horas2 <- ocupados |>
-  filter(habituales < 888,                                # Centinelas en habituales
-         ____ < 888)                                      # Centinelas en efectivas
+  filter(habituales < 888, # Centinelas en habituales
+         efectivas < 888) # Centinelas en efectivas                     
 
 
 sum(horas2$efectivas == 0)                                # Cuántos ocupados tienen 0 horas efectivas
@@ -714,16 +714,16 @@ sum(horas2$efectivas == 0)                                # Cuántos ocupados ti
 p2_g3 <- ggplot(horas2, aes(x = habituales,                  # Eje X: horas habituales
                          y = efectivas)) +                # Eje Y: horas efectivas
 
-  ____(____) +                                            # alpha bajo o geom_bin_2d()
+  geom_point(alpha=0.5) +                                            # alpha bajo o geom_bin_2d()
 
   geom_abline(intercept = 0,                              # Diagonal y = x:
-              slope = ____,                               # sobre ella, efectivas = habituales
+              slope = 1,                               # sobre ella, efectivas = habituales
               linetype = "dashed",
               color = "grey40") +
 
   coord_equal() +                                         # Misma escala en ambos ejes
 
-  labs(title   = "____",                                  # Título: el hallazgo
+  labs(title   = "La mayoria trabajaron horas habituales, los que se apartan trabajaron menos",                                  # Título: el hallazgo
        x       = "Horas habituales por semana",
        y       = "Horas efectivas por semana",
        caption = "Fuente: INE, ENE mayo-julio 2026. Ocupados, sin centinelas 888 y 999.")
@@ -740,15 +740,19 @@ ggsave("output/figuras/t4p2_g3_habituales_efectivas.png", p2_g3,
 # 9.3 Interpretación de los ceros
 # -----------------------------------------------------------------------------
 #
-# [PREGUNTA] Según el manual de la ENE, ¿quiénes son los ocupados con 0 horas
+#  Según el manual de la ENE, ¿quiénes son los ocupados con 0 horas
 #            efectivas? ¿Qué significan los puntos sobre y bajo la diagonal?
 #
-# Respuesta:
+# Los ocupados con 0 horas efectivas son personas que tienen trabajo, pero que 
+# estuvieron ausentes temporalmente durante la semana de referencia, por ejemplo por 
+# vacaciones, licencia médica o permiso. Por eso siguen contando como ocupados. 
+# Los puntos sobre la diagonal trabajaron esa semana exactamente sus horas habituales; 
+# los que quedan bajo la diagonal trabajaron menos de lo habitual, y los que quedan 
+# sobre ella, más. La mayoría se concentra en la diagonal.
 #
 #
 #
 # -----------------------------------------------------------------------------
-# [COMMIT SUGERIDO] "T4 P2: gráfico 3, horas habituales vs efectivas"
 
 
 
