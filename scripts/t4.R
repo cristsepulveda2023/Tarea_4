@@ -308,9 +308,8 @@ ggsave("output/figuras/t4p1_g2_salario.png",               # Ruta y nombre del a
 
 
 
-
 # =============================================================================
-# 3. PARTE 1, GRÁFICO 3 - ENE: EN QUÉ TRABAJAN HOMBRES Y MUJERES             (20 pts)
+# 3. PARTE 1, GRÁFICO 3 - ENE: EN QUÉ TRABAJAN HOMBRES Y MUJERES             
 # =============================================================================
 #
 # Criterios de evaluación:
@@ -330,7 +329,7 @@ ggsave("output/figuras/t4p1_g2_salario.png",               # Ruta y nombre del a
 # -----------------------------------------------------------------------------
 
 ocupados <- read.csv2("data/raw/ene-2026-06-mjj.csv") |>   # read.csv2: separador ";"
-  filter(activ == ____) |>                                 # Conserva solo a los ocupados
+  filter(activ == 1) |>                                 # Conserva solo a los ocupados
   mutate(
     sexo = ifelse(sexo == 1,                               # Convierte el código en texto
                   "Hombres",
@@ -354,16 +353,16 @@ table(ocupados$categoria, useNA = "ifany")                 # Verifica que no que
 
 g3 <- ggplot(ocupados, aes(x = sexo,                       # Una barra por sexo
                            fill = categoria,               # Color según categoría ocupacional
-                           weight = ____)) +               # Factor de expansión (ponderación)
+                           weight = fact_cal)) +               # Factor de expansión (ponderación)
 
-  geom_bar(position = "____",                              # Cada barra suma 100 %
+  geom_bar(position = "fill",                              # Cada barra suma 100 %
            width = 0.6) +                                  # Ancho de las barras
 
   scale_fill_viridis_d() +                                 # Paleta accesible para daltonismo
 
-  scale_y_continuous(labels = ____()) +                    # Eje Y en porcentaje
+  scale_y_continuous(labels = label_percent()) +       # Eje Y en porcentaje
 
-  labs(title   = "____",                                   # Título: el hallazgo del gráfico
+  labs(title   = "El servicio domestico es casi exclusivo de las mujeres",                                   # Título: el hallazgo del gráfico
        x       = NULL,                                     # Eje X sin nombre
        y       = "Porcentaje de ocupados",                 # Nombre del eje Y
        fill    = NULL,                                     # Leyenda sin título
@@ -391,44 +390,59 @@ ggsave("output/figuras/t4p1_g3_ene.png",                   # Ruta y nombre del a
 # 3.4 Tabla de apoyo para responder con cifras
 # -----------------------------------------------------------------------------
 #
-# [COMPLETAR] Tabla con el porcentaje ponderado de ocupados por sexo y
-#             categoría. Funciones sugeridas: count(sexo, categoria,
-#             wt = fact_cal), group_by(sexo) y mutate().
+# Tabla con el porcentaje ponderado de ocupados por sexo y
+# categoría. Funciones sugeridas: count(sexo, categoria,
+# wt = fact_cal), group_by(sexo) y mutate().
 
 
+tabla_g3 <- ocupados |>
+  count(sexo, categoria, wt = fact_cal) |> # Suma ponderada por sexo y categoría
+  group_by(sexo) |>                        # Calcula dentro de cada sexo
+  mutate(pct = round(100 * n / sum(n), 1)) # Porcentaje de cada categoría
 
-
-
-
-
-
+tabla_g3
 
 
 # 3.5 Preguntas
 # -----------------------------------------------------------------------------
 #
-# [PREGUNTA] ¿En qué categoría está la mayor diferencia entre hombres y
-#            mujeres, y en cuál casi no hay diferencia? Indicar las cifras.
+# ¿En qué categoría está la mayor diferencia entre hombres y
+# mujeres, y en cuál casi no hay diferencia? Indicar las cifras.
 #
-# Respuesta:
-#
-#
-#
-# [PREGUNTA] ¿Qué cambiaría si se elimina weight = fact_cal?
-#            (Se sugiere repetir el gráfico sin ponderar y comparar.)
-#
-# Respuesta:
+# La mayor diferencia entre hombres y mujeres está en la categoría asalariado 
+# privado: 64,9 % de los hombres ocupados trabaja en ella, contra 53,9 % de las 
+# mujeres, lo que equivale a 11 puntos porcentuales. En cambio, en cuenta propia 
+# casi no hay diferencia: 21,1 % de los hombres y 21,2 % de las mujeres
 #
 #
+#
+# ¿Qué cambiaría si se elimina weight = fact_cal?
+# (Se sugiere repetir el gráfico sin ponderar y comparar.)
+#
+# Comparación: la misma tabla, pero SIN ponderar
+
+   tabla_sin_peso <- ocupados |>
+  count(sexo, categoria) |> # Cuenta personas, sin fact_cal
+  group_by(sexo) |>
+  mutate(pct = round(100 * n / sum(n), 1)) # Porcentaje sin ponderar
+
+   tabla_sin_peso
+#
+# Si se elimina weight = fact_cal, cada persona encuestada cuenta lo mismo y 
+# los porcentajes cambian entre 1 y 3 puntos. Por ejemplo, las mujeres asalariadas
+# privadas pasan de 53,9 % a 50,4 %, y la brecha en esa categoría sube de 11 a 12,5 
+# puntos. El panorama general se mantiene, pero las cifras sin ponderar solo describen 
+# a la muestra, no a los ocupados de Chile, porque el factor de expansión corrige 
+# que algunos grupos estén sobrerrepresentados en la encuesta.
 #
 # -----------------------------------------------------------------------------
-# [COMMIT SUGERIDO] "T4 P1: gráfico 3, categoría ocupacional por sexo"
+
 
 
 
 
 # =============================================================================
-# 4. CHECKLIST FINAL PARTE 1 (10 pts)
+# 4. CHECKLIST FINAL PARTE 1 
 # =============================================================================
 #
 # Revisar antes de entregar:
