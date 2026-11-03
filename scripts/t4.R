@@ -197,7 +197,7 @@ head(salario)                                              # Revisa las primeras
 # Salario real en pesos de 2010: nominal x 100 / IPC (el IPC vale 100 en 2010).
 
 salario <- salario |>
-  mutate(real = ____)                                      # Crea la columna del salario real
+  mutate(real = (salario_minimo*100/ipc))    # Crea la columna del salario real
 
 
 
@@ -208,24 +208,24 @@ salario <- salario |>
 # el tipo de salario y una columna "valor" con el monto.
 
 salario_largo <- salario |>
-  select(anio,                                             # Conserva el año
-         nominal = salario_minimo,                         # Renombra el salario nominal
-         real) |>                                          # Conserva el salario real
-  pivot_longer(cols = c(____, ____),                       # Columnas que se apilan
-               names_to  = "serie",                        # Columna con el nombre de la serie
-               values_to = "valor") |>                     # Columna con el monto
-  mutate(serie = ifelse(serie == "nominal",                # Nombres legibles para las etiquetas
+  select(anio,                                     # Conserva el año
+         nominal = salario_minimo,                 # Renombra el salario nominal
+         real) |>                                  # Conserva el salario real
+  pivot_longer(cols = c(nominal, real),            # Columnas que se apilan
+               names_to  = "serie",                # Columna con el nombre de la serie
+               values_to = "valor") |>             # Columna con el monto
+  mutate(serie = ifelse(serie == "nominal",        # Nombres legibles para las etiquetas
                         "Nominal",
                         "Real (pesos de 2010)"))
 
 
-salario_largo                                              # Muestra la tabla resultante
+salario_largo                        # Muestra la tabla resultante
 
 # [RESULTADO ESPERADO] 24 filas (12 años por 2 series).
 
 
 etiquetas <- salario_largo |>
-  filter(anio == max(anio))                                # Solo el último año, para ubicar las etiquetas
+  filter(anio == max(anio))     # Solo el último año, para ubicar las etiquetas
 
 
 
@@ -235,7 +235,7 @@ etiquetas <- salario_largo |>
 g2 <- ggplot(salario_largo, aes(x = anio,                  # Eje X: año
                                 y = valor,                 # Eje Y: monto del salario
                                 color = serie,             # Un color por serie
-                                linetype = ____)) +        # Un tipo de línea por serie
+                                linetype = serie)) +        # Un tipo de línea por serie
 
   geom_line(linewidth = 1) +                               # Grosor de la línea (linewidth, no size)
 
@@ -253,14 +253,14 @@ g2 <- ggplot(salario_largo, aes(x = anio,                  # Eje X: año
 
   scale_y_continuous(labels = pesos) +                     # Eje Y en pesos chilenos
 
-  labs(title   = "____",                                   # Título: el hallazgo del gráfico
+  labs(title   = "Desde 2021 la inflación se come buena parte del alza del salario minimo",                                   # Título: el hallazgo del gráfico
        x       = NULL,                                     # Eje X sin nombre (son años)
        y       = "Ingreso mínimo mensual",                 # Nombre del eje Y
        caption = "Fuente: ingreso mínimo nominal e IPC, 2014-2025 (material del curso).") +
 
   theme_minimal() +                                        # Tema limpio
 
-  theme(legend.position  = "____",                         # Oculta la leyenda
+  theme(legend.position  = "none",                         # Oculta la leyenda
         panel.grid.minor = element_blank())                # Elimina la grilla secundaria
 
 
@@ -281,21 +281,30 @@ ggsave("output/figuras/t4p1_g2_salario.png",               # Ruta y nombre del a
 # 2.5 Preguntas
 # -----------------------------------------------------------------------------
 #
-# [PREGUNTA] ¿Por qué en este gráfico el eje Y no necesita partir en 0 y en
-#            un gráfico de barras sí?
+# ¿Por qué en este gráfico el eje Y no necesita partir en 0 y en
+# un gráfico de barras sí?
 #
-# Respuesta:
+# En un gráfico de líneas no es necesario que el eje Y parta en cero, porque 
+# lo que importa no es el valor desde el inicio, sino ver cómo la línea sube y 
+# baja en el tiempo. Además, en este caso el eje Y muestra ingresos, y 
+# no existen ingresos mínimos cercanos a cero. En cambio, en un gráfico de barras 
+# el largo de la barra representa el dato, por lo que si el eje no parte en cero 
+# se exageran las diferencias
 #
 #
 #
-# [PREGUNTA] ¿Qué se gana usando color y tipo de línea al mismo tiempo?
+# ¿Qué se gana usando color y tipo de línea al mismo tiempo?
 #
-# Respuesta:
+# Usar color y tipo de línea al mismo tiempo es una codificación redundante: 
+# las dos series se distinguen por dos señales distintas. Si se usara el mismo color 
+# y el mismo tipo de línea, el gráfico sería más difícil de leer. Además, si las series 
+# se diferenciaran solo por color, una persona daltónica o alguien que imprime en blanco 
+# y negro no podría distinguirlas, pero con el tipo de línea igual puede hacerlo.
 #
 #
 #
 # -----------------------------------------------------------------------------
-# [COMMIT SUGERIDO] "T4 P1: gráfico 2, salario mínimo nominal vs real"
+
 
 
 
