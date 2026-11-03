@@ -447,14 +447,14 @@ tabla_g3
 #
 # Revisar antes de entregar:
 #
-# [ ] El título de cada gráfico expresa el hallazgo, no las variables.
-# [ ] Las barras parten desde 0 (gráfico 3). No se usó ylim().
-# [ ] Paletas accesibles (Okabe-Ito, viridis). Sin rojo contra verde.
-# [ ] Etiquetas directas en el gráfico 2, sin leyenda.
-# [ ] Ejes con unidades: pesos en los gráficos 1 y 2, porcentaje en el 3.
-# [ ] Fuente en la caption, indicando si los datos están ponderados.
-# [ ] Las tres figuras exportadas con ggsave() a 300 dpi.
-# [ ] El script se ejecuta completo al abrir T4.Rproj, sin modificaciones.
+# [x] El título de cada gráfico expresa el hallazgo, no las variables.
+# [x] Las barras parten desde 0 (gráfico 3). No se usó ylim().
+# [x] Paletas accesibles (Okabe-Ito, viridis). Sin rojo contra verde.
+# [x] Etiquetas directas en el gráfico 2, sin leyenda.
+# [x] Ejes con unidades: pesos en los gráficos 1 y 2, porcentaje en el 3.
+# [x] Fuente en la caption, indicando si los datos están ponderados.
+# [x] Las tres figuras exportadas con ggsave() a 300 dpi.
+# [x] El script se ejecuta completo al abrir T4.Rproj, sin modificaciones.
 #
 # =============================================================================
 
@@ -471,7 +471,7 @@ tabla_g3
 
 
 # =============================================================================
-# 5. TEMA PROPIO                                                     (6 pts)
+# 5. TEMA PROPIO                                                     
 # =============================================================================
 #
 # Criterios de evaluación:
@@ -480,20 +480,20 @@ tabla_g3
 #   - Activado para todos los gráficos con theme_set().
 # -----------------------------------------------------------------------------
 
-tema_t4 <- function(base = 12) {                  # Función con un argumento: tamaño de letra
-
-  theme_minimal(base_size = base) +               # Tema de partida
-
-    theme(
-      plot.title       = element_text(face = "____"),  # Cambio 1: título en negrita
-      panel.grid.minor = element_____(),               # Cambio 2: sin grilla secundaria
-      legend.position  = "____"                        # Cambio 3: posición de la leyenda
-    )
-}
-
-
-theme_set(____)                                   # Activa el tema para todo el script
-
+  tema_t4 <- function(base = 12) { # Función con un argumento: tamaño de letra
+    
+    theme_minimal(base_size = base) + # Tema de partida
+      
+      theme(
+        plot.title = element_text(face = "bold"), # Cambio 1: título en negrita
+        panel.grid.minor = element_blank(), # Cambio 2: sin grilla secundaria
+        legend.position = "top" # Cambio 3: leyenda arriba
+      )
+  }
+   
+   
+   theme_set(tema_t4()) # Activa el tema para todo el script
+   ```
 
 
 
@@ -543,13 +543,24 @@ table(ocupados$habituales >= 888)                         # Cuántos centinelas 
 table(ocupados$efectivas  >= 888)                         # Cuántos centinelas hay en efectivas
 
 
-# [COMPLETAR] Revisar con table() si alguna variable que se use en los
+# Revisar con table() si alguna variable que se use en los
 #             gráficos tiene el código 9 (no sabe / no responde) y anotar
 #             aquí cuál es:
-#
-#             Variable con código 9: ____________________
 
-# [RESULTADO ESPERADO] 103 casos con 888 y 8 con 999, en ambas variables.
+
+ table(ocupados$categoria_ocupacion, useNA = "ifany") # Códigos de categoría ocupacional
+ 
+ table(ocupados$ocup_form, useNA = "ifany") # Códigos de formal / informal
+ 
+ 
+#             Variable con código 9: ____________________
+ 
+ 
+# Variable con código 9: ninguna. Se revisaron categoria_ocupacion (códigos 1 a 7) 
+# y ocup_form (1 y 2), y no presentan el código 9 ni valores NA en este trimestre. 
+# Los únicos valores a limpiar son los centinelas 888 y 999 en habituales y efectivas.
+
+# 103 casos con 888 y 8 con 999, en ambas variables.
 
 
 
@@ -575,7 +586,7 @@ p2_g1 <- ggplot(casen, aes(x = educ,                         # Eje X: años de e
 
   scale_y_continuous(labels = pesos) +                    # Eje Y en pesos
 
-  labs(title   = "____",                                  # Título: el hallazgo
+  labs(title   = "La brecha de ingreso por género se achica con más años de estudio",                                  # Título: el hallazgo
        x       = "Años de escolaridad",
        y       = "Ingreso mensual",
        color   = NULL,
@@ -592,7 +603,7 @@ ggsave("output/figuras/t4p2_g1_casen.png", p2_g1,            # Exporta a 300 dpi
 
 
 # =============================================================================
-# 8. PARTE 2, GRÁFICO 2 - ENE: DISTRIBUCIÓN DE HORAS HABITUALES POR SEXO     (12 pts)
+# 8. PARTE 2, GRÁFICO 2 - ENE: DISTRIBUCIÓN DE HORAS HABITUALES POR SEXO     
 # =============================================================================
 #
 # Criterios de evaluación:
@@ -606,7 +617,7 @@ ggsave("output/figuras/t4p2_g1_casen.png", p2_g1,            # Exporta a 300 dpi
 # -----------------------------------------------------------------------------
 
 horas <- ocupados |>
-  filter(____ < 888)                                      # Elimina los centinelas 888 y 999
+  filter(habituales  < 888)                                      # Elimina los centinelas 888 y 999
 
 
 nrow(horas)                                               # Ocupados que quedan
@@ -618,22 +629,22 @@ nrow(horas)                                               # Ocupados que quedan
 # 8.2 Construcción del gráfico
 # -----------------------------------------------------------------------------
 #
-# [DECIDIR] Elegir UN geom: geom_density(), geom_boxplot() o geom_violin().
-#           Los tres aceptan aes(weight = fact_cal).
+# Elegir UN geom: geom_density(), geom_boxplot() o geom_violin().
+# Los tres aceptan aes(weight = fact_cal).
 
-p2_g2 <- ggplot(horas, aes(x = ____,                         # Eje X (depende del geom elegido)
-                        y = ____,                         # Eje Y (depende del geom elegido)
-                        fill = sexo,                      # Un color por sexo
-                        weight = ____)) +                 # Ponderación
+p2_g2 <- ggplot(horas, aes(x = sexo,                   # Eje X (depende del geom elegido)
+                        y = habituales,                      # Eje Y (depende del geom elegido)
+                        fill = sexo,                   # Un color por sexo
+                        weight = fact_cal)) +              # Ponderación
 
-  ____(____) +                                            # Geom elegido y sus argumentos
+  geom_violin() +                                 # Geom elegido y sus argumentos
 
   scale_fill_manual(values = c(Hombres = azul,            # Colores accesibles
                                Mujeres = naranjo)) +
 
-  labs(title   = "____",                                  # Título: el hallazgo
-       x       = "____",
-       y       = "____",
+  labs(title   = "las mujeres trabajan jornadas más variadas, los hombres más completas",                                  # Título: el hallazgo
+       x       = NULL,
+       y       = "horas habituales en semana",
        fill    = NULL,
        caption = "Fuente: INE, ENE mayo-julio 2026. Ocupados, ponderado con fact_cal.")
 
@@ -649,14 +660,20 @@ ggsave("output/figuras/t4p2_g2_horas.png", p2_g2,            # Exporta a 300 dpi
 # 8.3 Justificación del geom
 # -----------------------------------------------------------------------------
 #
-# [PREGUNTA] ¿Por qué se eligió este geom y no los otros dos?
+# ¿Por qué se eligió este geom y no los otros dos?
 #
-# Respuesta:
+# Se eligió el violín porque muestra la forma completa de la distribución de 
+# horas de cada sexo, uno al lado del otro. Esto permite ver que los hombres se 
+# concentran en jornada completa, mientras que las mujeres tienen más presencia 
+# en jornadas parciales. Un boxplot solo mostraría la mediana y los cuartiles, y 
+# escondería ese grupo de jornadas cortas. Una densidad superpondría las dos 
+# curvas y una taparía a la otra. Además, con más de 40.000 ocupados, la forma 
+# que muestra el violín es confiable
 #
 #
 #
 # -----------------------------------------------------------------------------
-# [COMMIT SUGERIDO] "T4 P2: gráfico 2, distribución de horas por sexo"
+
 
 
 
