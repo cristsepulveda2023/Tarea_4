@@ -5,7 +5,7 @@
 # Curso:  Fundamentos de Programación para Análisis Económico (136280)
 #         Universidad de Concepción, sede Chillán - Segundo semestre 2026
 # Autor:  Cristóbal Sepúlveda
-# Fecha:  [FECHA]
+# Fecha:  [03-11-2026]
 # =============================================================================
 #
 # OBJETIVO
@@ -21,25 +21,11 @@
 #   2. data/raw/salario_minimo_chile.csv Ingreso mínimo nominal e IPC, 2014-2025
 #   3. data/raw/ene-2026-06-mjj.csv      ENE, trimestre mayo-julio 2026
 #
-# CONVENCIONES DE ESTE DOCUMENTO
-#   ____                 Espacio por completar.
-#   [COMPLETAR]          Bloque que debe escribirse completo.
-#   [DECIDIR]            Decisión propia que debe justificarse por escrito.
-#   [RESULTADO ESPERADO] Valor que se debería obtener al ejecutar el código.
-#   [PREGUNTA]           Pregunta de la rúbrica. Se responde con palabras
-#                        propias y con cifras.
-#   [COMMIT SUGERIDO]    Punto recomendado para registrar el avance en GitHub.
-#
+# 
 # INSTRUCCIONES DE EJECUCIÓN
 #   Abrir el proyecto desde T4.Rproj y ejecutar el script completo.
 #   No utilizar setwd(): las rutas son relativas a la carpeta del proyecto.
 #
-# PUNTAJE (200 pts, rúbrica de Canvas)
-#   Parte 1: Gráfico 1: 15 | Gráfico 2: 20 | Gráfico 3: 20 | Respuestas: 25
-#            Checklist: 10 | Script y commits: 10
-#   Parte 2: Gráficos 2, 3, 4 y 5: 12 c/u | Tema propio: 6
-#            Figura compuesta: 12 | Checklist: 6 | Reflexión: 18
-#            Script y commits: 10
 # =============================================================================
 
 
@@ -74,14 +60,14 @@ dir.create("output/figuras",                  # Carpeta donde se guardan las fig
 # #############################################################################
 #
 #                    PARTE 1 - TRES GRÁFICOS, TRES BASES
-#                          (Semana 10 - 100 pts)
+#                               (Semana 10)
 #
 # #############################################################################
 
 
 
 # =============================================================================
-# 1. PARTE 1, GRÁFICO 1 - CASEN: EDUCACIÓN E INGRESO POR GÉNERO              (15 pts)
+# 1. PARTE 1, GRÁFICO 1 - CASEN: EDUCACIÓN E INGRESO POR GÉNERO              
 # =============================================================================
 #
 # Criterios de evaluación:
@@ -176,7 +162,7 @@ ggsave("output/figuras/t4p1_g1_casen.png",            # Ruta y nombre del archiv
 
 
 # =============================================================================
-# 2. PARTE 1, GRÁFICO 2 - INGRESO MÍNIMO: NOMINAL CONTRA REAL                (20 pts)
+# 2. PARTE 1, GRÁFICO 2 - INGRESO MÍNIMO: NOMINAL CONTRA REAL                
 # =============================================================================
 #
 # Criterios de evaluación:
@@ -493,7 +479,6 @@ tabla_g3
    
    
    theme_set(tema_t4()) # Activa el tema para todo el script
-   ```
 
 
 
@@ -522,7 +507,7 @@ regiones <- c("Tarapacá", "Antofagasta", "Atacama", "Coquimbo", "Valparaíso",
 
 ocupados <- ocupados |>
   mutate(
-    informal   = ocup_form == ____,                       # TRUE si es informal
+    informal   = ocup_form == 2,                          # TRUE si es informal
     region_txt = regiones[region]                         # Código de región a nombre
   )
 
@@ -553,7 +538,6 @@ table(ocupados$efectivas  >= 888)                         # Cuántos centinelas 
  table(ocupados$ocup_form, useNA = "ifany") # Códigos de formal / informal
  
  
-#             Variable con código 9: ____________________
  
  
 # Variable con código 9: ninguna. Se revisaron categoria_ocupacion (códigos 1 a 7) 
@@ -679,7 +663,7 @@ ggsave("output/figuras/t4p2_g2_horas.png", p2_g2,            # Exporta a 300 dpi
 
 
 # =============================================================================
-# 9. PARTE 2, GRÁFICO 3 - ENE: HORAS HABITUALES CONTRA HORAS EFECTIVAS       (12 pts)
+# 9. PARTE 2, GRÁFICO 3 - ENE: HORAS HABITUALES CONTRA HORAS EFECTIVAS      
 # =============================================================================
 #
 # Criterios de evaluación:
@@ -700,21 +684,21 @@ horas2 <- ocupados |>
 
 sum(horas2$efectivas == 0)                                # Cuántos ocupados tienen 0 horas efectivas
 
-# [RESULTADO ESPERADO] alrededor de 2.100 personas con 0 horas efectivas.
+# alrededor de 2.100 personas con 0 horas efectivas.
 
 
 
 # 9.2 Construcción del gráfico
 # -----------------------------------------------------------------------------
 #
-# [DECIDIR] geom_point() con alpha bajo, o geom_bin_2d(). Con más de 40.000
-#           personas, los puntos opacos forman una mancha que oculta la
-#           densidad.
+# geom_point() con alpha bajo, o geom_bin_2d(). Con más de 40.000
+# personas, los puntos opacos forman una mancha que oculta la
+# densidad.
 
 p2_g3 <- ggplot(horas2, aes(x = habituales,                  # Eje X: horas habituales
                          y = efectivas)) +                # Eje Y: horas efectivas
 
-  geom_point(alpha=0.5) +                                            # alpha bajo o geom_bin_2d()
+  geom_point(alpha = 0.05) +                              # Alpha bajo: con 40.000 puntos evita la mancha
 
   geom_abline(intercept = 0,                              # Diagonal y = x:
               slope = 1,                               # sobre ella, efectivas = habituales
@@ -758,7 +742,7 @@ ggsave("output/figuras/t4p2_g3_habituales_efectivas.png", p2_g3,
 
 
 # =============================================================================
-# 10. PARTE 2, GRÁFICO 4 - ENE: INFORMALIDAD POR REGIÓN CON INTERVALOS        (12 pts)
+# 10. PARTE 2, GRÁFICO 4 - ENE: INFORMALIDAD POR REGIÓN CON INTERVALOS      
 # =============================================================================
 #
 # Criterios de evaluación:
@@ -777,21 +761,26 @@ ggsave("output/figuras/t4p2_g3_habituales_efectivas.png", p2_g3,
 # -----------------------------------------------------------------------------
 
 ic_region <- ocupados |>
-  group_by(____) |>                                       # Una fila por región
+  group_by(region_txt) |>                                 # Una fila por región
   summarise(
-    n    = n(),                                           # Personas encuestadas
-    p    = weighted.mean(informal, ____),                 # Tasa ponderada
-    se   = sqrt(____),                                    # Error estándar
-    bajo = p - 1.96 * se,                                 # Límite inferior
-    alto = ____                                           # Límite superior
+    n    = n(),                                           # Personas encuestadas en la región
+    p    = weighted.mean(informal, fact_cal),             # Tasa de informalidad ponderada
+    se   = sqrt(p * (1 - p) / n),                         # Error estándar de una proporción
+    bajo = p - 1.96 * se,                                 # Límite inferior del IC 95 %
+    alto = p + 1.96 * se                                  # Límite superior del IC 95 %
   )
 
 
 ic_region |> arrange(p)                                   # Revisa la tabla ordenada
 
+# [RESULTADO ESPERADO] La Araucanía 35,0 % y Ñuble 34,5 % en el extremo alto;
+#                      Magallanes y Antofagasta 21,1 % en el bajo.
+
 
 nacional <- weighted.mean(ocupados$informal,              # Tasa nacional, para la
                           ocupados$fact_cal)              # línea de referencia
+
+nacional                                                  # [RESULTADO ESPERADO] 0,265 (26,5 %)
 
 
 
@@ -802,19 +791,19 @@ p2_g4 <- ggplot(ic_region, aes(x = p,                        # Eje X: tasa de in
                             y = reorder(region_txt, p),   # Regiones ordenadas por tasa
                             color = region_txt == "Ñuble")) +  # Resalta una región
 
-  geom_vline(xintercept = ____,                           # Línea del promedio nacional
+  geom_vline(xintercept = nacional,                       # Línea del promedio nacional
              linetype = "dashed",
              color = "grey40") +
 
-  geom_pointrange(aes(xmin = ____,                        # Inicio del intervalo
-                      xmax = ____)) +                     # Fin del intervalo
+  geom_pointrange(aes(xmin = bajo,                        # Inicio del intervalo
+                      xmax = alto)) +                     # Fin del intervalo
 
   scale_color_manual(values = c(gris, naranjo),           # Gris contexto, naranjo resalte
                      guide = "none") +                    # Sin leyenda
 
   scale_x_continuous(labels = label_percent()) +          # Eje X en porcentaje
 
-  labs(title   = "____",                                  # Título: el hallazgo
+  labs(title   = "La informalidad es mayor en el sur: Ñuble y La Araucanía superan el 34 %",  # Título: el hallazgo
        x       = "Tasa de informalidad (IC 95 %)",
        y       = NULL,
        caption = "Fuente: INE, ENE mayo-julio 2026. Ponderado con fact_cal. Línea: promedio nacional.")
@@ -831,15 +820,24 @@ ggsave("output/figuras/t4p2_g4_informalidad_region.png", p2_g4,
 # 10.3 Limitación
 # -----------------------------------------------------------------------------
 #
-# [PREGUNTA] ¿Qué limitación tiene este intervalo? (Pista: la ENE no es una
-#            muestra aleatoria simple; tiene estratos y conglomerados.)
+# ¿Qué limitación tiene este intervalo? (Pista: la ENE no es una
+# muestra aleatoria simple; tiene estratos y conglomerados.)
 #
-# Respuesta:
-#
-#
+# 
+# La fórmula raíz(p(1-p)/n) supone una muestra aleatoria simple, pero la ENE
+# tiene un diseño complejo: divide al país en estratos y encuesta conglomerados
+# (viviendas de una misma zona), y además usa factores de expansión distintos.
+# Las personas de un mismo conglomerado se parecen entre sí, así que la muestra
+# entrega menos información que n personas independientes. Por eso el error
+# estándar real es mayor y estos intervalos son más angostos de lo que deberían
+# (por ejemplo, ±0,9 pp en la Metropolitana y ±2,8 pp en Tarapacá). Esto importa
+# al comparar regiones cercanas: Ñuble (34,5 %) y La Araucanía (35,0 %) no se
+# pueden distinguir, y algunas regiones que parecen distintas del promedio
+# nacional (26,5 %) podrían no serlo con el intervalo correcto. Lo adecuado sería
+# usar el paquete survey con las variables de estrato y conglomerado de la ENE.
 #
 # -----------------------------------------------------------------------------
-# [COMMIT SUGERIDO] "T4 P2: gráfico 4, informalidad por región con IC"
+
 
 
 
@@ -853,60 +851,68 @@ ggsave("output/figuras/t4p2_g4_informalidad_region.png", p2_g4,
 #   - geom_pointrange().
 #   - Limitación del intervalo reconocida.
 #
-# [DECIDIR] Pregunta propia, con CASEN o ENE. Ideas:
-#   - Informalidad por tramo de edad (la "U" de la informalidad).
-#   - Horas habituales promedio por categoría ocupacional.
-#   - Ingreso medio por sector en la CASEN.
+# Pregunta propia: ¿cómo cambia la informalidad laboral según la edad?
+#   ¿Se observa la "U" de la informalidad (más alta en jóvenes y mayores)?
 #
-# Fórmula (media):
-#   se = desviación estándar / raíz(n)
-#   IC = media +/- t * se,   con t = qt(0.975, df = n - 1)
-#
-# Mi pregunta: ________________________________________________________________
+# Fórmula (proporción, igual que en el gráfico 4):
+#   p  = tasa de informalidad ponderada del tramo de edad
+#   se = raíz( p * (1 - p) / n )
+#   IC = p +/- 1,96 * se
 # -----------------------------------------------------------------------------
 
 
 # 11.1 Cálculo del intervalo
 # -----------------------------------------------------------------------------
-#
-# [COMPLETAR] Tabla con una fila por grupo y las columnas n, media (o p),
-#             se, bajo y alto.
 
-ic_propio <- ____ |>
-  group_by(____) |>
+ic_edad <- ocupados |>
+  mutate(tramo = cut(edad,                                # Agrupa la edad en tramos
+                     breaks = c(15, 25, 35, 45, 55, 65, Inf),   # Límites de cada tramo
+                     right  = FALSE,                      # Incluye el límite inferior: [15, 25)
+                     labels = c("15-24", "25-34", "35-44",
+                                "45-54", "55-64", "65 y más"))) |>
+  group_by(tramo) |>                                      # Una fila por tramo de edad
   summarise(
-    n     = n(),
-    media = ____,
-    se    = ____,
-    bajo  = ____,
-    alto  = ____
+    n    = n(),                                           # Personas encuestadas en el tramo
+    p    = weighted.mean(informal, fact_cal),             # Tasa de informalidad ponderada
+    se   = sqrt(p * (1 - p) / n),                         # Error estándar de una proporción
+    bajo = p - 1.96 * se,                                 # Límite inferior del IC 95 %
+    alto = p + 1.96 * se                                  # Límite superior del IC 95 %
   )
 
 
-ic_propio                                                 # Revisa la tabla
+ic_edad                                                   # Revisa la tabla
+
+#  15-24: 32,8 % · 25-34: 22,3 % · 35-44: 22,1 % ·
+#  45-54: 23,4 % · 55-64: 29,7 % · 65 y más: 56,2 %
 
 
 
 # 11.2 Construcción del gráfico
 # -----------------------------------------------------------------------------
 
-p2_g5 <- ggplot(ic_propio, aes(x = ____,                     # Variable de grupo o valor
-                            y = ____)) +
+p2_g5 <- ggplot(ic_edad, aes(x = tramo,                   # Eje X: tramo de edad (en orden)
+                             y = p)) +                    # Eje Y: tasa de informalidad
 
-  geom_pointrange(aes(____ = bajo,                        # xmin/ymin según orientación
-                      ____ = alto),
+  geom_hline(yintercept = nacional,                       # Línea del promedio nacional
+             linetype = "dashed",
+             color = "grey40") +
+
+  geom_pointrange(aes(ymin = bajo,                        # Inicio del intervalo
+                      ymax = alto),                       # Fin del intervalo
                   color = azul) +
 
-  labs(title   = "____",                                  # Título: el hallazgo
-       x       = "____",
-       y       = "____",
-       caption = "Fuente: ____.")
+  scale_y_continuous(labels = label_percent()) +          # Eje Y en porcentaje
+
+  labs(title   = "La informalidad forma una U: más alta en jóvenes y sobre todo en mayores de 65",  # Título: el hallazgo
+       x       = "Tramo de edad",
+       y       = "Tasa de informalidad (IC 95 %)",
+       caption = "Fuente: INE, ENE mayo-julio 2026. Ocupados, ponderado con fact_cal. Línea: promedio nacional.")
 
 
-p2_g5                                                        # Muestra el gráfico
+p2_g5                                                     # Muestra el gráfico
 
 
-ggsave("output/figuras/t4p2_g5_propio.png", p2_g5,
+ggsave("output/figuras/t4p2_g5_informalidad_edad.png", p2_g5,   # Exporta a 300 dpi
        width = 8, height = 5, dpi = 300)
 
 
@@ -914,14 +920,21 @@ ggsave("output/figuras/t4p2_g5_propio.png", p2_g5,
 # 11.3 Limitación
 # -----------------------------------------------------------------------------
 #
-# [PREGUNTA] ¿Qué limitación tiene este intervalo?
+# ¿Qué limitación tiene este intervalo?
 #
-# Respuesta:
-#
-#
+# 
+# Tiene la misma limitación que el gráfico 4: se calcula como si la ENE fuera
+# una muestra aleatoria simple, ignorando estratos y conglomerados, por lo que
+# los intervalos quedan más angostos de lo real. Además, n es el número de
+# personas encuestadas y no el ponderado, y los tramos no tienen el mismo tamaño:
+# el de 15-24 tiene solo 2.826 casos (±1,7 pp), mientras que el de 35-44 tiene
+# 9.653 (±0,8 pp). Aun así, la conclusión principal no cambia: el tramo de 65 y
+# más (56,2 %) está muy por encima de todos los demás, y los tramos centrales
+# (22 a 23 %) están bajo el promedio nacional. Lo que sí sería dudoso es afirmar
+# diferencias pequeñas, como entre 25-34 (22,3 %) y 35-44 (22,1 %).
 #
 # -----------------------------------------------------------------------------
-# [COMMIT SUGERIDO] "T4 P2: gráfico 5, pregunta propia con IC"
+
 
 
 
@@ -940,70 +953,77 @@ ggsave("output/figuras/t4p2_g5_propio.png", p2_g5,
 # Por eso la composición va entre paréntesis EXTERNOS antes de plot_layout()
 # y plot_annotation(). Sin ellos, el título y los rótulos no aparecen.
 #
-# [DECIDIR] Qué tres gráficos combinar y en qué disposición.
+# Qué tres gráficos combinar y en qué disposición.
 # -----------------------------------------------------------------------------
 
-figura <- (____ | (____ / ____)) +                        # Izquierda | (arriba / abajo)
-
-  plot_layout(widths = c(1, 1.3)) +                       # Ancho relativo de las columnas
-
+figura <- (p2_g4 | (p2_g2 / p2_g5)) +                     # Regiones a la izquierda (16 filas necesitan altura)
+  
+  plot_layout(widths = c(1.2, 1)) +                       # Columna izquierda un poco más ancha
+  
   plot_annotation(
-    title      = "____",                                  # Hallazgo de la figura completa
-    caption    = "Fuente: ____.",                         # Fuente de los datos
-    tag_levels = "____"                                   # Rótulos de los paneles
-  )
+    title      = "La informalidad laboral en Chile depende de dónde vives y de tu edad",
+    caption    = "Fuente: INE, ENE mayo-julio 2026. Ocupados, ponderado con fact_cal. IC al 95 %.",
+    tag_levels = "A"                                      # Rótulos de los paneles: A, B, C
+  ) &                                                     # "&" aplica lo siguiente a TODOS los paneles
+  
+  labs(caption = NULL) &                                  # Quita la fuente repetida de cada panel
+  
+  theme(plot.title = element_text(size = 11))             # Títulos de los paneles más chicos
 
-
-figura                                                    # Muestra la figura
-
+figura
 
 ggsave("output/figuras/t4p2_figura.png", figura,          # Versión PNG (imagen)
-       width = 12, height = 7, dpi = ____)
+       width = 14, height = 9, dpi = 300)
 
-ggsave("output/figuras/t4p2_figura.pdf", figura,          # Versión PDF (vectorial)
-       width = 12, height = 7)
-
+ggsave("output/figuras/t4p2_figura.pdf", figura,          # Versión PDF (vectorial, no lleva dpi)
+       width = 14, height = 9)
 # -----------------------------------------------------------------------------
-# [COMMIT SUGERIDO] "T4 P2: figura compuesta en PNG y PDF"
 
 
 
 
 # =============================================================================
-# 13. REFLEXIÓN (media página)                                       (18 pts)
+# 13. REFLEXIÓN                                        
 # =============================================================================
 #
 # Responder con el vocabulario de la Semana 9 (chart junk, color con función,
 # honestidad, claridad, etc.), argumentando con conceptos y no con gustos.
 #
-# [PREGUNTA 1] De los cinco gráficos, ¿cuál comunica mejor su hallazgo y por qué?
+# De los cinco gráficos, ¿cuál comunica mejor su hallazgo y por qué?
 #
-# Respuesta:
+# 
+# El gráfico 4 (informalidad por región). Usa el color con función: todas las
+# regiones en gris como contexto y solo Ñuble en naranjo, así el ojo va directo
+# al mensaje. Las regiones están ordenadas por tasa, lo que facilita comparar,
+# y la línea del promedio nacional (26,5 %) da una referencia inmediata para ver
+# quién está sobre o bajo el país. No tiene chart junk (sin leyenda, sin grilla
+# secundaria) y es honesto, porque muestra el intervalo de confianza y no solo
+# el punto, de modo que se ve qué diferencias son reales. Se lee sin explicación.
 #
+# En el gráfico 2 de la Parte 2, ¿por qué se eligió ese geom y no otro?
 #
+# 
+# Se eligió el violín porque muestra la forma completa de la distribución de
+# horas de cada sexo, uno al lado del otro. El dato clave es que la distribución
+# de las mujeres tiene más peso en jornadas cortas: el 24 % trabaja menos de 30
+# horas habituales, contra el 13 % de los hombres, que se concentran en 40-45
+# horas. Un boxplot reduciría todo a mediana y cuartiles y escondería ese grupo
+# de jornada parcial; una densidad superpondría las dos curvas y una taparía a la
+# otra. Con más de 40.000 ocupados, la forma del violín es confiable.
 #
-# [PREGUNTA 2] En el gráfico 2 de la Parte 2, ¿por qué se eligió ese geom y no otro?
+#¿Qué agrega la figura compuesta que no dan los gráficos por separado?
 #
-# Respuesta:
-#
-#
-#
-# [PREGUNTA 3] ¿Qué agrega la figura compuesta que no dan los gráficos por separado?
-#
-# Respuesta:
-#
-#
-#
-# [PREGUNTA 4] La rúbrica de Canvas pide cuatro preguntas, pero el enunciado
-#              solo trae tres. Confirmar cuál es la cuarta.
-#              ____________________________________________________________
-#
-# Respuesta:
-#
+# 
+# Permite leer una sola historia sobre el mercado laboral con la misma fuente,
+# el mismo tema y los mismos colores. Los paneles A y C usan la misma escala en
+# porcentaje y la misma línea del promedio nacional, así que se puede comparar
+# directamente cuánto pesa la región (de 21 % a 35 %, unos 14 puntos) frente a
+# la edad (de 22 % a 56 %, unos 34 puntos): la edad separa mucho más. El panel B
+# agrega cómo se reparten las horas entre hombres y mujeres. Los rótulos A, B y C
+# permiten citar cada panel y el título general resume el hallazgo conjunto.
 #
 #
 # -----------------------------------------------------------------------------
-# [COMMIT SUGERIDO] "T4 P2: reflexión"
 
 
 
@@ -1014,14 +1034,14 @@ ggsave("output/figuras/t4p2_figura.pdf", figura,          # Versión PDF (vector
 #
 # Revisar antes de entregar:
 #
-# [ ] El título de cada gráfico expresa el hallazgo, no las variables.
-# [ ] Las barras y áreas parten desde 0. No se usó ylim().
-# [ ] Paletas accesibles (Okabe-Ito, viridis). Sin rojo contra verde.
-# [ ] El color tiene función: gris para el contexto, un color para el mensaje.
-# [ ] Ejes con unidades: pesos, horas o porcentaje.
-# [ ] Fuente en la caption, indicando si los datos están ponderados.
-# [ ] Cifras de la ENE ponderadas con fact_cal.
-# [ ] Todas las figuras exportadas con ggsave() a 300 dpi; la compuesta también en PDF.
-# [ ] El script se ejecuta completo al abrir T4.Rproj, sin modificaciones.
+# [x] El título de cada gráfico expresa el hallazgo, no las variables.
+# [x] Las barras y áreas parten desde 0. No se usó ylim().
+# [x] Paletas accesibles (Okabe-Ito, viridis). Sin rojo contra verde.
+# [x] El color tiene función: gris para el contexto, un color para el mensaje.
+# [x] Ejes con unidades: pesos, horas o porcentaje.
+# [x] Fuente en la caption, indicando si los datos están ponderados.
+# [x] Cifras de la ENE ponderadas con fact_cal.
+# [x] Todas las figuras exportadas con ggsave() a 300 dpi; la compuesta también en PDF.
+# [x] El script se ejecuta completo al abrir T4.Rproj, sin modificaciones.
 #
 # =============================================================================
